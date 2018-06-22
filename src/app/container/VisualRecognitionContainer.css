@@ -1,0 +1,36 @@
+.container {
+    max-width: 960px;
+    margin: auto;
+}
+
+.row:before,
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.col {
+    padding: 0 1%;
+    width: 98%;
+    float: left;
+    margin: auto;
+}
+
+.col-6 {
+    width: 48%;
+}
+
+.input-img-url > input {
+    width: 80%;
+    height: 25px;
+}
+
+.input-img-url > button {
+    width: 19%;
+    height: 31px;
+}
+
+.img-responsive {
+    width: 100%;
+}
