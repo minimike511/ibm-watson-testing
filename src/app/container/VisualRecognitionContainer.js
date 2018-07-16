@@ -8,7 +8,8 @@ class VisualRecognitionContainer extends Component {
         this.state = {
             url: null,
             images: null,
-            text: null,
+            translationText: null,
+            audioText: null,
             translation:null,
             audio: 'https://3m-mike-dev-test.mybluemix.net/audio-api?text='
         };
@@ -16,7 +17,8 @@ class VisualRecognitionContainer extends Component {
         this.listResults= this.listResults.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.getImages = this.getImages.bind(this);
-        this.updatePhrase = this.updatePhrase.bind(this);
+        this.updateTranslationPhrase = this.updateTranslationPhrase.bind(this);
+        this.updateAudioPhrase = this.updateAudioPhrase.bind(this);
         this.getTranslation = this.getTranslation.bind(this);
         this.getAudio = this.getAudio.bind(this);
         this.playAudio = this.playAudio.bind(this);
@@ -35,18 +37,23 @@ class VisualRecognitionContainer extends Component {
         return images
     };
 
-    updatePhrase ({target}) {
+    updateTranslationPhrase ({target}) {
         this.setState ({
-            text: target.value
+            translationText: target.value
+        })
+    }
+
+    updateAudioPhrase ({target}) {
+        this.setState ({
+            audioText: target.value
         })
     }
 
     getTranslation  = () => {
-        fetch('https://3m-mike-dev-test.mybluemix.net/translation-api?text=' + this.state.text)
+        fetch('https://3m-mike-dev-test.mybluemix.net/translation-api?text=' + this.state.translationText)
             .then(response => response.json())
             .then(
                 json => {
-                    console.log(json);
                     this.setState({
                         translation: json.translation
                     });
@@ -56,7 +63,7 @@ class VisualRecognitionContainer extends Component {
     };
 
     getAudio  = () => {
-        this.setState({audio: 'https://3m-mike-dev-test.mybluemix.net/audio-api?text=' + this.state.text});
+        this.setState({audio: 'https://3m-mike-dev-test.mybluemix.net/audio-api?text=' + this.state.audioText});
     };
 
     getImages = () => {
@@ -65,7 +72,6 @@ class VisualRecognitionContainer extends Component {
             .then(response => response.json())
             .then(
                 json => {
-                    console.log(json);
                     this.setState({
                         images: json.classifiers[0].classes
                     });
@@ -112,7 +118,7 @@ class VisualRecognitionContainer extends Component {
                     </div>
                 </div>
                 <div className="col input-img-url">
-                    <input onKeyPress={e =>this.handleTranslationKeyPress(e)} onChange={this.updatePhrase} placeholder="Put some English text to be translated into French"/>
+                    <input onKeyPress={e =>this.handleTranslationKeyPress(e)} onChange={this.updateTranslationPhrase} placeholder="Put some English text to be translated into French"/>
                     <button onClick={this.getTranslation}>Translate</button>
                 </div>
                 <div className="row">
@@ -127,12 +133,12 @@ class VisualRecognitionContainer extends Component {
                     </div>
                 </div>
                 <div className="col input-img-url">
-                    <input onKeyPress={e =>this.handleAudioKeyPress(e)} onChange={this.updatePhrase} placeholder="Put some English text to be converted into an audio file"/>
+                    <input onKeyPress={e =>this.handleAudioKeyPress(e)} onChange={this.updateAudioPhrase} placeholder="Put some English text to be converted into an audio file"/>
                     <button onClick={this.getAudio}>Speak</button>
                 </div>
                 <div className="row">
                     <div className="col">
-                        {this.state.audio.indexOf(this.state.text) >= 0 ? this.playAudio(): null}
+                        {this.state.audio.indexOf(this.state.audioText) >= 0 ? this.playAudio(): null}
                     </div>
                 </div>
 
